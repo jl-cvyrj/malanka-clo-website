@@ -27,7 +27,7 @@ public class AdminUser {
     private String passwordHash;
 
     @Column(nullable = false, length = 30)
-    private String role = "ADMIN";
+    private AdminRole role = AdminRole.ADMIN;
 
     @Column(nullable = false)
     private boolean enabled = true;
