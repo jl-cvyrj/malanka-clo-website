@@ -5,46 +5,41 @@ import com.malankaclo.backend.common.exception.ResourceNotFoundException;
 import com.malankaclo.backend.product.Product;
 import com.malankaclo.backend.product.ProductRepository;
 import com.malankaclo.backend.product.ProductSize;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public OrderService(OrderRepository orderRepository,
-                        ProductRepository productRepository) {
-        this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
-    }
-
     @Transactional
     public Order createOrder(CreateOrderCommand command) {
         validateCommand(command);
-
-        Order order = new Order();
-        order.setOrderNumber(generateOrderNumber());
-        order.setType(command.type());
-        order.setCustomerName(command.customerName().trim());
-        order.setPhone(command.phone().trim());
-        order.setEmail(blankToNull(command.email()));
-        order.setCountry(blankToNull(command.country()));
-        order.setCity(blankToNull(command.city()));
-        order.setAddress(blankToNull(command.address()));
-        order.setDeliveryMethod(command.deliveryMethod());
-        order.setPaymentMethod(command.paymentMethod());
-        order.setPaymentStatus(PaymentStatus.UNPAID);
-        order.setComment(blankToNull(command.comment()));
-        order.setCurrency("BYN");
+        
+        Order order = Order.builder()
+                .orderNumber(generateOrderNumber())
+                .type(command.type())
+                .customerName(command.customerName().trim())
+                .phone(command.phone().trim())
+                .email(blankToNull(command.email()))
+                .country(blankToNull(command.country()))
+                .city(blankToNull(command.city()))
+                .address(blankToNull(command.address()))
+                .deliveryMethod(command.deliveryMethod())
+                .paymentMethod(command.paymentMethod())
+                .paymentStatus(PaymentStatus.UNPAID)
+                .comment(blankToNull(command.comment()))
+                .currency("BYN")
+                .build();
 
         BigDecimal subtotal = BigDecimal.ZERO;
 

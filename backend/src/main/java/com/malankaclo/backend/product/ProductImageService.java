@@ -1,17 +1,15 @@
 package com.malankaclo.backend.product;
 
 import com.malankaclo.backend.common.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductImageService {
 
     private final ProductRepository productRepository;
-
-    public ProductImageService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Transactional
     public Product addImage(Long productId, String url, String altText, Integer sortOrder) {

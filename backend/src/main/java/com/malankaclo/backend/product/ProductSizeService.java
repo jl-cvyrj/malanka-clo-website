@@ -2,17 +2,15 @@ package com.malankaclo.backend.product;
 
 import com.malankaclo.backend.common.exception.BusinessException;
 import com.malankaclo.backend.common.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductSizeService {
 
     private final ProductRepository productRepository;
-
-    public ProductSizeService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Transactional
     public Product addSize(Long productId, String sizeCode, boolean available) {
