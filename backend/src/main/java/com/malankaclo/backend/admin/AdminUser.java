@@ -1,16 +1,19 @@
 package com.malankaclo.backend.admin;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "admin_users")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class AdminUser {
 
     @Id
@@ -39,16 +42,9 @@ public class AdminUser {
         this.username = username;
         this.passwordHash = passwordHash;
     }
-
-    public Long getId() { return id; }
-    public String getUsername() { return username; }
-    public String getPasswordHash() { return passwordHash; }
-    public String getRole() { return role; }
-    public boolean isEnabled() { return enabled; }
-    public Instant getCreatedAt() { return createdAt; }
-
-    public void setUsername(String username) { this.username = username; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
-    public void setRole(String role) { this.role = role; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+    }
 }

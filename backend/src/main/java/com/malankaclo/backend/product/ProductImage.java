@@ -9,9 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "product_images")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class ProductImage {
 
     @Id
@@ -39,15 +47,4 @@ public class ProductImage {
         this.altText = altText;
         this.sortOrder = sortOrder == null ? 0 : sortOrder;
     }
-
-    public Long getId() { return id; }
-    public Product getProduct() { return product; }
-    public String getUrl() { return url; }
-    public String getAltText() { return altText; }
-    public Integer getSortOrder() { return sortOrder; }
-
-    void setProduct(Product product) { this.product = product; }
-    public void setUrl(String url) { this.url = url; }
-    public void setAltText(String altText) { this.altText = altText; }
-    public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
 }

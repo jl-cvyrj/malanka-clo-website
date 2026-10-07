@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -22,6 +23,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -98,25 +103,4 @@ public class Product {
         size.setProduct(this);
         sizes.add(size);
     }
-
-    public Long getId() { return id; }
-    public Category getCategory() { return category; }
-    public String getName() { return name; }
-    public String getSlug() { return slug; }
-    public String getDescription() { return description; }
-    public BigDecimal getPrice() { return price; }
-    public String getCurrency() { return currency; }
-    public boolean isActive() { return active; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
-    public List<ProductImage> getImages() { return images; }
-    public List<ProductSize> getSizes() { return sizes; }
-
-    public void setCategory(Category category) { this.category = category; }
-    public void setName(String name) { this.name = name; }
-    public void setSlug(String slug) { this.slug = slug; }
-    public void setDescription(String description) { this.description = description; }
-    public void setPrice(BigDecimal price) { this.price = price; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    public void setActive(boolean active) { this.active = active; }
 }

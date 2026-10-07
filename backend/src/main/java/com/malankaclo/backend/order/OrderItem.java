@@ -10,11 +10,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class OrderItem {
 
     @Id
@@ -52,19 +60,4 @@ public class OrderItem {
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
-
-    public Long getId() { return id; }
-    public Order getOrder() { return order; }
-    public Product getProduct() { return product; }
-    public String getProductName() { return productName; }
-    public String getSizeCode() { return sizeCode; }
-    public Integer getQuantity() { return quantity; }
-    public BigDecimal getUnitPrice() { return unitPrice; }
-
-    void setOrder(Order order) { this.order = order; }
-    public void setProduct(Product product) { this.product = product; }
-    public void setProductName(String productName) { this.productName = productName; }
-    public void setSizeCode(String sizeCode) { this.sizeCode = sizeCode; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
 }

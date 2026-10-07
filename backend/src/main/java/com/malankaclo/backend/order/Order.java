@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -20,6 +21,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class Order {
 
     @Id
@@ -110,44 +115,4 @@ public class Order {
         item.setOrder(this);
         items.add(item);
     }
-
-    public Long getId() { return id; }
-    public String getOrderNumber() { return orderNumber; }
-    public OrderType getType() { return type; }
-    public OrderStatus getStatus() { return status; }
-    public String getCustomerName() { return customerName; }
-    public String getPhone() { return phone; }
-    public String getEmail() { return email; }
-    public String getCountry() { return country; }
-    public String getCity() { return city; }
-    public String getAddress() { return address; }
-    public DeliveryMethod getDeliveryMethod() { return deliveryMethod; }
-    public PaymentMethod getPaymentMethod() { return paymentMethod; }
-    public PaymentStatus getPaymentStatus() { return paymentStatus; }
-    public BigDecimal getSubtotalAmount() { return subtotalAmount; }
-    public BigDecimal getShippingAmount() { return shippingAmount; }
-    public BigDecimal getTotalAmount() { return totalAmount; }
-    public String getCurrency() { return currency; }
-    public String getComment() { return comment; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
-    public List<OrderItem> getItems() { return items; }
-
-    public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
-    public void setType(OrderType type) { this.type = type; }
-    public void setStatus(OrderStatus status) { this.status = status; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setEmail(String email) { this.email = email; }
-    public void setCountry(String country) { this.country = country; }
-    public void setCity(String city) { this.city = city; }
-    public void setAddress(String address) { this.address = address; }
-    public void setDeliveryMethod(DeliveryMethod deliveryMethod) { this.deliveryMethod = deliveryMethod; }
-    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
-    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
-    public void setSubtotalAmount(BigDecimal subtotalAmount) { this.subtotalAmount = subtotalAmount; }
-    public void setShippingAmount(BigDecimal shippingAmount) { this.shippingAmount = shippingAmount; }
-    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    public void setComment(String comment) { this.comment = comment; }
 }

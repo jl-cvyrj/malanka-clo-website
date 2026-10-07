@@ -1,16 +1,16 @@
 package com.malankaclo.backend.category;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "categories")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class Category {
 
     @Id
@@ -40,16 +40,9 @@ public class Category {
         this.slug = slug;
         this.sortOrder = sortOrder;
     }
-
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getSlug() { return slug; }
-    public Integer getSortOrder() { return sortOrder; }
-    public boolean isActive() { return active; }
-    public Instant getCreatedAt() { return createdAt; }
-
-    public void setName(String name) { this.name = name; }
-    public void setSlug(String slug) { this.slug = slug; }
-    public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
-    public void setActive(boolean active) { this.active = active; }
+    
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+    }
 }

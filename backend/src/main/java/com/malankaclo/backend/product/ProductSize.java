@@ -10,12 +10,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.*;
 
 @Entity
 @Table(
         name = "product_sizes",
         uniqueConstraints = @UniqueConstraint(name = "uq_product_size", columnNames = {"product_id", "size_code"})
 )
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class ProductSize {
 
     @Id
@@ -39,13 +44,4 @@ public class ProductSize {
         this.sizeCode = sizeCode;
         this.available = available;
     }
-
-    public Long getId() { return id; }
-    public Product getProduct() { return product; }
-    public String getSizeCode() { return sizeCode; }
-    public boolean isAvailable() { return available; }
-
-    void setProduct(Product product) { this.product = product; }
-    public void setSizeCode(String sizeCode) { this.sizeCode = sizeCode; }
-    public void setAvailable(boolean available) { this.available = available; }
 }
