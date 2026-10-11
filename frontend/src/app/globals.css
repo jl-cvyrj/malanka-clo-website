@@ -59,7 +59,13 @@ body {
 }
 
 body {
+  /* Flex column pinned to the viewport: <main> grows, so the footer is always
+     pushed to the very bottom — no white gap below it on pages with little
+     content. 100dvh keeps it flush with the visible area on mobile. */
   min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-body);
@@ -67,6 +73,11 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Storefront only: the store layout renders <main> between header and footer. */
+main {
+  flex: 1 0 auto;
 }
 
 img,

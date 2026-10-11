@@ -4,7 +4,10 @@
 
 .track {
   display: flex;
-  justify-content: center;
+  /* flex-start (not center!): centering an overflowing flex row clips the left
+     overflow, which can never be scrolled to — the first card would be stuck
+     off-screen on mobile. Left-aligned, every card is reachable by swipe. */
+  justify-content: flex-start;
   gap: 2.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
