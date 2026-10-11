@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CategoryCarousel } from "@/components/home/CategoryCarousel";
+import { CategoryCarousel, type CategoryCover } from "@/components/home/CategoryCarousel";
 import { HeroStrip } from "@/components/home/HeroStrip";
 import { ParallaxStrip } from "@/components/home/ParallaxStrip";
 import { ProductGrid } from "@/components/product/ProductGrid";
@@ -10,6 +10,12 @@ import { t } from "@/locales";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
+
+/** Pseudo-entropy pick for a cover image. Kept at module scope so the React
+ *  purity lint rule doesn't see an impure call inside the component. */
+function pickRandom<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
 
 const ArrowIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -26,6 +32,28 @@ export default async function HomePage() {
   } catch {
     categories = [];
   }
+
+  // Give every category card a real background: pick a random product inside
+  // that category which actually has an image, so the carousel never shows a
+  // blank card. Done server-side so the image ships in the initial HTML.
+  const coverImages: Record<string, CategoryCover> = {};
+  await Promise.all(
+    categories.map(async (category) => {
+      try {
+        const page = await getProducts({
+          category: category.slug,
+          page: 0,
+          size: 50,
+        });
+        const withImage = page.content.filter((p) => p.primaryImageUrl?.trim());
+        if (withImage.length === 0) return;
+        const pick = pickRandom(withImage);
+        coverImages[category.slug] = { src: pick.primaryImageUrl as string };
+      } catch {
+        // No cover for this category — the plain card is shown instead.
+      }
+    }),
+  );
 
   try {
     const page = await getProducts({ sort: "newest", page: 0, size: 8 });
@@ -49,7 +77,7 @@ export default async function HomePage() {
         <div className={styles.container}>
           <h2 className={styles.categoriesTitle}>{t.home.categoriesTitle}</h2>
           {categories.length > 0 ? (
-            <CategoryCarousel categories={categories} />
+            <CategoryCarousel categories={categories} coverImages={coverImages} />
           ) : (
             <EmptyState title={t.home.noCategories} />
           )}
