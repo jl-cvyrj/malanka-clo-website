@@ -55,6 +55,10 @@ connection: Supabase's direct host is IPv6-only, and Render is IPv4-only. The
 shared pooler is IPv4. Session mode keeps one server connection per client
 (fine for a long-running Spring app) and supports the DDL Flyway needs.
 
+> **Free of charge.** The shared pooler accepts IPv4 by default — you do **not**
+> need the paid *"Dedicated IPv4 address"* add-on. That add-on exists only for
+> the direct connection and the dedicated pooler, which you aren't using.
+
 ```
 Host:     aws-0-<region>.pooler.supabase.com
 Port:     5432
@@ -173,6 +177,49 @@ Render redeploys automatically.
 | --- | --- |
 | Backend deploy fails immediately, "no open ports" | The app isn't reading `$PORT`. Confirm `server.port: ${PORT:8080}` is present and that you rebuilt. |
 | Backend starts then dies: `relation "flyway_schema_history"` / auth errors | Wrong Supabase URL/user/password, or missing `?sslmode=require`. Use the **session pooler** (IPv4), not the direct host. |
+| Backend crashes with `java.net.SocketException: Network is unreachable` | You connected to the **direct** Supabase host (`db.<ref>.supabase.co`), which is IPv6-only — Render has no IPv6. Switch to the **Session pooler** string (`aws-0-<region>.pooler.supabase.com`, port 5432). See "The direct connection fix" below. |
+
+### The "Network is unreachable" fix (direct → session pooler)
+
+In Supabase Dashboard → **Connect**:
+
+1. Choose the **Session pooler** tab — it explicitly says *shared pooler / IPv4*.
+   Do **not** use the "Direct connection" tab.
+2. Copy the host, port, user and database parts (password goes in its own env var):
+
+   ```
+   Host:  aws-0-eu-central-1.pooler.supabase.com   (whatever your region is)
+   Port:  5432
+   DB:    postgres
+   User:  postgres.<project-ref>
+   ```
+
+3. In Render → backend service → **Environment**, set exactly these three:
+
+   ```
+   SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:5432/postgres?sslmode=require
+   SPRING_DATASOURCE_USERNAME=postgres.<project-ref>
+   SPRING_DATASOURCE_PASSWORD=<your database password>
+   ```
+
+4. A healthy deploy log looks like: `HikariPool-1 - Start completed` → Flyway `Migrating schema` (`V1`…`V5`) → `Started BackendApplication` → **Live**.
+
+> **Never put credentials inside the JDBC URL.** The Postgres JDBC driver does
+> **not** accept `user:password@host` — it literally treats the whole
+> `postgres:<password>@db…` as the hostname and fails with
+> `UnknownHostException`. Always set `SPRING_DATASOURCE_USERNAME` and
+> `SPRING_DATASOURCE_PASSWORD` separately.
+>
+> Pooler hostnames use either `aws-0-…` or `aws-1-…` depending on when the
+> project was created — copy the host exactly from **Connect → Session pooler**.
+> A wrong region answers `FATAL: tenant/user not found`; a wrong password
+> answers `password authentication failed`.
+
+Sanity-check the string from your own machine first (the pooler is IPv4, so if it works locally it will work on Render):
+
+```bash
+psql "postgresql://postgres.<project-ref>:<password>@aws-0-eu-central-1.pooler.supabase.com:5432/postgres?sslmode=require" -c "select version();"
+```
 | `/api/...` on the frontend returns 502/504 | `BACKEND_ORIGIN` is wrong or the backend is still building/cold-starting. Check the backend URL directly. |
 | Catalog loads but admin login does nothing | `BACKEND_ORIGIN` not set (or set at runtime but not build time); the build must see it. Redeploy the frontend. |
 | Admin login works but saving products gives **403** | The CSRF cookie isn't first-party — this is exactly what the `/api` proxy prevents. Make sure `NEXT_PUBLIC_API_BASE_URL` is empty (not `http://localhost:8080`). |
