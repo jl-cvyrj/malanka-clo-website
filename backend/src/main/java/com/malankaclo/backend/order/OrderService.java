@@ -35,6 +35,8 @@ public class OrderService {
                 .customerName(command.customerName().trim())
                 .phone(command.phone().trim())
                 .email(blankToNull(command.email()))
+                .telegramUsername(normalizeTelegram(command.telegramUsername()))
+                .postalIndex(blankToNull(command.postalIndex()))
                 .country(blankToNull(command.country()))
                 .city(blankToNull(command.city()))
                 .address(blankToNull(command.address()))
@@ -153,6 +155,9 @@ public class OrderService {
             if (isBlank(command.city()) || isBlank(command.address())) {
                 throw new BusinessException("City and address are required for a domestic order");
             }
+            if (isBlank(command.postalIndex())) {
+                throw new BusinessException("Postal index is required for a domestic order");
+            }
             if (command.deliveryMethod() == null) {
                 throw new BusinessException("Delivery method is required for a domestic order");
             }
@@ -185,6 +190,15 @@ public class OrderService {
 
     private String blankToNull(String value) {
         return isBlank(value) ? null : value.trim();
+    }
+
+    /** Telegram handles are stored without the leading {@code @}. */
+    private String normalizeTelegram(String value) {
+        String trimmed = blankToNull(value);
+        if (trimmed == null) {
+            return null;
+        }
+        return trimmed.startsWith("@") ? trimmed.substring(1) : trimmed;
     }
 
     private boolean isBlank(String value) {

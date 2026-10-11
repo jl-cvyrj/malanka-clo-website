@@ -1,0 +1,96 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gray-600);
+  margin-bottom: var(--space-2);
+}
+
+.sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.size {
+  min-width: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition),
+    border-color var(--transition);
+}
+
+.size:hover:not(:disabled) {
+  border-color: var(--color-black);
+}
+
+.sizeActive {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.sizeDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-gray-300);
+  width: max-content;
+}
+
+.qtyButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--color-white);
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qtyButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qtyValue {
+  min-width: 3rem;
+  text-align: center;
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+}
+
+.note {
+  color: var(--color-gray-500);
+  font-size: 0.9rem;
+}
+
+.added {
+  font-size: 0.9rem;
+  color: #2e7d32;
+}

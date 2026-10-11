@@ -7,6 +7,8 @@ public record CreateOrderCommand(
         String customerName,
         String phone,
         String email,
+        String telegramUsername,
+        String postalIndex,
         String country,
         String city,
         String address,

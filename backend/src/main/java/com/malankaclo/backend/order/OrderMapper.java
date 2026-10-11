@@ -21,6 +21,8 @@ public class OrderMapper {
                 order.getCustomerName(),
                 order.getPhone(),
                 order.getEmail(),
+                order.getTelegramUsername(),
+                order.getPostalIndex(),
                 order.getCountry(),
                 order.getCity(),
                 order.getAddress(),

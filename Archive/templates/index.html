@@ -1,0 +1,431 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:font-family="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    </head>
+    <body class="bg-[#ffffff] min-h-screen">
+    <!-- Падключаем Alpine.js і Tailwind у <head>, калі яшчэ не падключаны -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script> -->
+
+    <!-- Header з адсочваннем скролу старонкі -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200"
+            x-data="{ open: false, showLogo: false }"
+            @scroll.window="showLogo = window.scrollY > 600">
+
+        <!-- Вобласць хэдара на 100% шырыні -->
+        <div class="w-full px-4 sm:px-6 h-20 flex items-center justify-between relative">
+
+            <!-- Кнопка адкрыцця меню (злева) -->
+            <button @click="open = true"
+                    class="flex items-center space-x-3 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-none transition font-medium focus:outline-none">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
+            <!-- ЛАГАТЫП У ХЭДАРЫ (з'яўляецца роўна па цэнтры пры скроле) -->
+            <div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <a th:href="@{/}" href="#" class="block">
+                    <img x-show="showLogo"
+                         x-transition:enter="transition ease-out duration-300 transform"
+                         x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-200 transform"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
+                         th:src="@{/images/malanka-logo.png}"
+                         src="../static/images/logo_original.jpg"
+                         alt="Malanka Logo"
+                         class="h-10 w-auto object-contain"
+                         x-cloak>
+                </a>
+            </div>
+
+            <!-- Іконка кошыку (справа) -->
+            <div class="flex items-center">
+                <a th:href="@{/cart}" src="../cart.html" class="relative p-2.5 bg-gray-100 hover:bg-gray-200 rounded-full transition text-gray-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 bg-black text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    0
+                </span>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- ВЫЯЗНОЕ МЕНЮ І ЗАЦЯМНЕННЕ (DRAWER & OVERLAY) -->
+        <!-- ========================================================= -->
+
+        <!-- 1. Зацямненне фону -->
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="open = false"
+             class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
+        </div>
+
+        <!-- 2. Бокавая выязная панэль -->
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="-translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="-translate-x-full"
+             class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 flex flex-col justify-between">
+
+            <div>
+                <div class="p-6 flex items-center justify-between border-b border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-900 font-['Oswald'] uppercase">Меню</h2>
+                    <button @click="open = false" class="p-2 text-gray-400 hover:text-gray-600 rounded-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <nav class="p-6 space-y-4">
+                    <a th:href="@{/}" class="block text-lg font-medium text-gray-800 hover:text-indigo-600 transition">
+                        Пра нас
+                    </a>
+                    <a th:href="@{/}" class="block text-lg font-medium text-gray-800 hover:text-indigo-600 transition">
+                        Кантакты
+                    </a>
+
+                    <div class="pt-4 border-t border-gray-100">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 font-['Oswald']">Катэгорыі</p>
+                        <div class="space-y-3 pl-2">
+                            <a th:href="@{/categories/outerwear}" class="block text-gray-600 hover:text-indigo-600 font-medium transition">
+                                Цішоткі
+                            </a>
+                            <a th:href="@{/categories/tshirts}" class="block text-gray-600 hover:text-indigo-600 font-medium transition">
+                                Лонгслівы
+                            </a>
+                            <a th:href="@{/categories/pants}" class="block text-gray-600 hover:text-indigo-600 font-medium transition">
+                                Худзі
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- 1. Верхні блок з выявай "New" -->
+    <div id="new_strip" class="relative z-10 w-full bg-[#D7D7D7] p-0 m-0 leading-none">
+        <div class="w-full p-0 m-0 flex justify-center items-center">
+            <img th:src="@{/images/new.png}"
+                 src="../static/images/new.png"
+                 alt="new"
+                 class="max-h-[600px] w-auto block p-0 m-0 object-contain">
+        </div>
+        <div class="absolute inset-0 flex flex-col justify-center items-start text-left ps-12 md:ps-20 p-6">
+            <h2 class="text-[70px] font-bold text-black font-['Oswald'] uppercase mb-2">
+                Новая калекцыя<br>
+                ад Маланкі
+            </h2>
+        </div>
+    </div>
+
+    <!-- 2. ГРАДЫЕНТНАЯ ПАЛАСА (НАЙВЫШЭЙШЫ СЛОЙ z-30) -->
+    <!-- Звярні ўвагу на pointer-events-none, каб яна не блакавала клікі -->
+    <div id="parallax-strip"
+         class="relative z-30 w-full h-[250px] bg-[#000000] pointer-events-none">
+        <div class="w-full h-full px-8 md:px-12 flex items-center justify-between relative pointer-events-auto">
+            <div class="w-[55%] flex items-center">
+                <img th:src="@{/images/malanka-logo.png}"
+                     src="../static/images/logo.png"
+                     alt="Malanka Logo"
+                     class="h-72 w-auto object-contain">
+            </div>
+            <div class="text-right z-10 max-w-lg">
+                <p class="text-[46px] font-[500] leading-[1] text-[#ffffff] mb-[16px] font-['Oswald']">
+                    пра стыль, <br>
+                    ідэнтычнасць, <br>
+                    гісторыю <br>
+                    і Беларусь.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. НІЖНІ КАНТЭЙНЕР (z-20 і -mt-[300px]) -->
+    <!-- Ён зацягнуты роўна пад паласу, таму паласа цалкам закрывае яго зверху! -->
+    <div class="relative z-20 -mt-[250px] pt-[130px] w-full bg-[#6B6B6B]">
+
+        <!-- Загаловак "Катэгорыі тавараў" -->
+        <div class="w-full py-6 px-8 flex justify-center items-center">
+            <h3 class="text-[36px] md:text-[45px] font-bold font-['Oswald'] uppercase tracking-widest text-black text-center">
+                Катэгорыі тавараў
+            </h3>
+        </div>
+
+    </div>
+
+    <!-- 3. Паласа з самімі катэгорыямі (накрывае або ідзе пад загалоўкам) -->
+    <div class="relative z-30 w-full bg-[#6B6B6B] py-10 px-4 sm:px-8"
+         x-data="{
+        items: [
+            { id: 1, title: 'Цішоткі', img: '../static/images/category1.jpg', url: '#' },
+            { id: 2, title: 'Лонгслівы', img: '../static/images/category2.jpg', url: '#' },
+            { id: 3, title: 'Худзі', img: '../static/images/category3.jpg', url: '#' },
+            { id: 4, title: 'Аксэсуары', img: '../static/images/category4.jpg', url: '#' },
+            { id: 5, title: 'Шоперы', img: '../static/images/category5.jpg', url: '#' },
+        ],
+        autoScrollInterval: null,
+        isAnimating: false,
+        init() { this.startAutoScroll(); },
+        startAutoScroll() { this.autoScrollInterval = setInterval(() => { this.scrollRight(); }, 3000); },
+        stopAutoScroll() { if (this.autoScrollInterval) clearInterval(this.autoScrollInterval); },
+        scrollRight() {
+            if (this.isAnimating) return;
+            this.isAnimating = true;
+            const container = this.$refs.container;
+            const firstCard = container.children[1];
+            if (!firstCard) return;
+            const cardWidth = firstCard.offsetWidth + 40;
+            container.style.transition = 'transform 500ms ease-in-out';
+            container.style.transform = `translateX(-${cardWidth}px)`;
+            setTimeout(() => {
+                container.style.transition = 'none';
+                container.style.transform = 'translateX(0)';
+                this.items.push(this.items.shift());
+                this.isAnimating = false;
+            }, 500);
+        },
+        scrollLeft() {
+            if (this.isAnimating) return;
+            this.isAnimating = true;
+            const container = this.$refs.container;
+            const lastCard = container.children[container.children.length - 1];
+            if (!lastCard) return;
+            const cardWidth = lastCard.offsetWidth + 40;
+            this.items.unshift(this.items.pop());
+            container.style.transition = 'none';
+            container.style.transform = `translateX(-${cardWidth}px)`;
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    container.style.transition = 'transform 500ms ease-in-out';
+                    container.style.transform = 'translateX(0)';
+                    setTimeout(() => { this.isAnimating = false; }, 500);
+                });
+            });
+        }
+     }"
+         @mouseenter="stopAutoScroll()"
+         @mouseleave="startAutoScroll()"
+    >
+        <div class="relative w-full overflow-hidden group">
+            <button @click="scrollLeft()"
+                    class="absolute left-2 top-1/2 -translate-y-1/2 z-20 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:outline-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]"
+                    aria-label="Назад">
+                <svg class="w-12 h-12 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+
+            <div x-ref="container" class="flex gap-10 w-full py-2">
+                <template x-for="item in items" :key="item.id">
+                    <a :href="item.url"
+                       class="w-[calc((100%-120px)/4)] flex-shrink-0 relative aspect-square overflow-hidden bg-gray-100 block group/card shadow-sm">
+                        <img :src="item.img"
+                             :alt="item.title"
+                             class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-110">
+                        <div class="absolute bottom-0 left-0 right-0 py-4 bg-black text-white text-center font-['Oswald'] uppercase tracking-wider text-[18px] transition-opacity duration-300 group-hover/card:opacity-0"
+                             x-text="item.title">
+                        </div>
+                    </a>
+                </template>
+            </div>
+
+            <button @click="scrollRight()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 z-20 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:outline-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]"
+                    aria-label="Уперад">
+                <svg class="w-12 h-12 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Верхні блок з адносна арыентаванай пазіцыяй (relative) -->
+    <div id="new_strip" class="relative w-full bg-[#D7D7D7] p-0 m-0 leading-none">
+
+        <!-- Блок з малюнкам (z-0) -->
+        <div class="w-full p-0 m-0 flex justify-center items-center">
+            <img th:src="@{/images/new.png}"
+                 src="../static/images/new.png"
+                 alt="new"
+                 class="max-h-[600px] w-auto block p-0 m-0 object-contain">
+        </div>
+
+        <div class="absolute inset-0 flex flex-col justify-center items-end text-right ps-12 md:ps-20 p-6">
+            <h2 class="text-[70px] font-bold text-black font-['Oswald'] uppercase mb-2">
+                Сустракай восень<br>
+                разам з Маланкай
+            </h2>
+        </div>
+
+    </div>
+
+    <script>
+        // Эфект паскоранай пракруткі для паласы
+        window.addEventListener('scroll', function() {
+            const strip = document.getElementById('parallax-strip');
+            const scrolled = window.scrollY;
+
+            // Змяняем каэфіцыент, каб паласа скролілася з лёгкім зрухам
+            strip.style.transform = `translateY(-${scrolled * 0.3}px)`;
+        });
+    </script>
+
+        <!-- Блок з усімі таварамі на белым фоне без скругленняў і рамак -->
+        <section class="w-full bg-white py-12 px-4 sm:px-8 md:px-12 relative z-20">
+
+            <!-- Верхні загаловак з кнопкай "Глядзець усё" (падкрэслены тэкст без фона) -->
+            <div class="flex flex-col sm:flex-row items-center justify-between mb-8 pb-4 border-b border-black/10 gap-4">
+                <h2 class="text-[32px] md:text-[40px] font-bold font-['Oswald'] uppercase tracking-wider text-black m-0 p-0 leading-none">
+                    Усе тавары
+                </h2>
+
+                <a href="#" class="group inline-flex items-center font-['Oswald'] uppercase tracking-wider text-[18px] text-black font-semibold">
+            <span class="underline underline-offset-8 decoration-2 decoration-black group-hover:decoration-gray-500 transition duration-300">
+                Глядзець усё
+            </span>
+                    <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Сетка з 8 тавараў (4 у шэраг, квадраты без скругленняў і рамак) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <!-- Тавар 1 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product1.jpg" alt="Худзі Маланка"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <!-- Кнопка/назва знізу без скругленняў -->
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Худзі «Маланка»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">140 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 2 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product2.jpg" alt="Футболка Пагоня"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Футболка «Пагоня»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">65 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 3 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product3.jpg" alt="Світшот Вольнасць"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Світшот «Вольнасць»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">120 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 4 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product4.jpg" alt="Шопер Полацк"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Шопер «Полацк»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">45 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 5 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product5.jpg" alt="Лонгсліў Полымя"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Лонгсліў «Полымя»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">85 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 6 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product6.jpg" alt="Шапка Орша"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Шапка «Орша»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">40 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 7 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product7.jpg" alt="Шкарпэткі Набор"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Набор шкарпэтак</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">25 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Тавар 8 -->
+                <a href="#" class="group block bg-transparent">
+                    <div class="relative w-full aspect-square overflow-hidden bg-gray-100">
+                        <img src="../static/images/product8.jpg" alt="Куртка Зіма"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/80 text-white transition-opacity duration-300 group-hover:opacity-0">
+                            <p class="font-['Oswald'] uppercase text-[18px] tracking-wide font-medium m-0">Куртка «Зіма»</p>
+                            <p class="text-sm font-sans text-gray-300 mt-0.5 m-0">220 BYN</p>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Ніжняя кнопка "Глядзець усё" (падкрэслены тэкст без фона) -->
+            <div class="mt-12 flex justify-center">
+                <a href="#" class="group inline-flex items-center font-['Oswald'] uppercase tracking-widest text-[20px] text-black font-bold">
+            <span class="underline underline-offset-8 decoration-2 decoration-black group-hover:decoration-gray-500 transition duration-300">
+                Глядзець усё
+            </span>
+                    <svg class="w-6 h-6 ml-3 transform group-hover:translate-x-1.5 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+
+    </section>
+
+    </body>
+</html>

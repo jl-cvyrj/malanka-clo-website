@@ -1,0 +1,49 @@
+.strip {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.imageWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  max-height: 600px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-6) var(--space-8);
+}
+
+.left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.title {
+  font-size: clamp(2rem, 6vw, 4.4rem);
+  line-height: 1;
+  white-space: pre-line;
+}
+
+@media (min-width: 768px) {
+  .overlay {
+    padding-inline: 5rem;
+  }
+}

@@ -1,0 +1,219 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-200);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  width: 100%;
+  padding-inline: var(--container-pad);
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.5rem 1rem;
+  background: var(--color-gray-100);
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.menuButton:hover {
+  background: var(--color-gray-200);
+}
+
+.menuIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke: var(--color-gray-700);
+  fill: none;
+  stroke-width: 2;
+}
+
+.logoWrap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  height: 2.5rem;
+  width: auto;
+  object-fit: contain;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.logoHidden {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+  pointer-events: none;
+}
+
+.cartLink {
+  position: relative;
+  display: inline-flex;
+  padding: 0.6rem;
+  background: var(--color-gray-100);
+  border-radius: 999px;
+  transition: background-color var(--transition);
+}
+
+.cartLink:hover {
+  background: var(--color-gray-200);
+}
+
+.cartIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke: var(--color-gray-700);
+  fill: none;
+  stroke-width: 2;
+}
+
+.badge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+/* Drawer */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 61;
+  height: 100%;
+  width: min(20rem, 85vw);
+  background: var(--color-white);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: slideIn 300ms ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.drawerTitle {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 1.25rem;
+}
+
+.closeButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-gray-400);
+}
+
+.closeButton:hover {
+  color: var(--color-gray-600);
+}
+
+.drawerNav {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.drawerLink {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  transition: color var(--transition);
+}
+
+.drawerLink:hover {
+  color: var(--color-black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.categoryBlock {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.categoryLabel {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gray-400);
+  margin-bottom: var(--space-3);
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-left: var(--space-2);
+}
+
+.categoryLink {
+  color: var(--color-gray-600);
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+.categoryLink:hover {
+  color: var(--color-black);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}

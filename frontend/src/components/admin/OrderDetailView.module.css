@@ -1,0 +1,79 @@
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-gray-100);
+  font-size: 0.9rem;
+}
+
+.meta:last-child {
+  border-bottom: none;
+}
+
+.metaLabel {
+  color: var(--color-gray-500);
+  flex-shrink: 0;
+}
+
+.metaValue {
+  text-align: right;
+  word-break: break-word;
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 14rem;
+}
+
+.controlLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gray-600);
+}
+
+.totals {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.totalRow {
+  display: flex;
+  gap: var(--space-6);
+  font-size: 0.9rem;
+}
+
+.totalRowStrong {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.totalLabel {
+  color: var(--color-gray-500);
+  min-width: 8rem;
+  text-align: right;
+}

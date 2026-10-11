@@ -1,0 +1,39 @@
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  margin-bottom: var(--space-8);
+}
+
+.stat {
+  border: 1px solid var(--color-gray-200);
+  background: var(--color-white);
+  padding: var(--space-6);
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gray-500);
+  margin-top: var(--space-2);
+}
+
+.statLink {
+  display: inline-block;
+  margin-top: var(--space-4);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hint {
+  color: var(--color-gray-500);
+  font-size: 0.9rem;
+}

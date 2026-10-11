@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,6 +56,8 @@ class OrderApiIntegrationTest extends AbstractIntegrationTest {
                   "type": "DOMESTIC",
                   "customerName": "  Іван  ",
                   "phone": "+375291234567",
+                  "telegramUsername": "@ivan_test",
+                  "postalIndex": "220000",
                   "country": "Беларусь",
                   "city": "Мінск",
                   "address": "вул. Леніна 1",
@@ -70,6 +73,9 @@ class OrderApiIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.status").value("NEW"))
                 .andExpect(jsonPath("$.paymentStatus").value("UNPAID"))
                 .andExpect(jsonPath("$.customerName").value("Іван"))
+                // Telegram handles are stored without the leading '@'.
+                .andExpect(jsonPath("$.telegramUsername").value("ivan_test"))
+                .andExpect(jsonPath("$.postalIndex").value("220000"))
                 .andExpect(jsonPath("$.items[0].productName", startsWith("Худзі")))
                 .andExpect(jsonPath("$.items[0].sizeCode").value("L"))
                 .andExpect(jsonPath("$.items[0].unitPrice").value(80.00))
@@ -84,6 +90,7 @@ class OrderApiIntegrationTest extends AbstractIntegrationTest {
                   "type": "DOMESTIC",
                   "customerName": "Іван",
                   "phone": "+375291234567",
+                  "postalIndex": "220000",
                   "city": "Мінск",
                   "address": "вул. Леніна 1",
                   "deliveryMethod": "BELPOST",
@@ -98,12 +105,55 @@ class OrderApiIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void rejectsDomesticOrderWithoutPostalIndex() throws Exception {
+        String json = """
+                {
+                  "type": "DOMESTIC",
+                  "customerName": "Іван",
+                  "phone": "+375291234567",
+                  "city": "Мінск",
+                  "address": "вул. Леніна 1",
+                  "deliveryMethod": "BELPOST",
+                  "paymentMethod": "FULL_PREPAYMENT",
+                  "items": [ { "productId": %d, "sizeCode": "L", "quantity": 1 } ]
+                }
+                """.formatted(product.getId());
+
+        mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Postal index")));
+    }
+
+    @Test
+    void rejectsInvalidTelegramUsername() throws Exception {
+        String json = """
+                {
+                  "type": "DOMESTIC",
+                  "customerName": "Іван",
+                  "phone": "+375291234567",
+                  "telegramUsername": "ab",
+                  "postalIndex": "220000",
+                  "city": "Мінск",
+                  "address": "вул. Леніна 1",
+                  "deliveryMethod": "BELPOST",
+                  "paymentMethod": "FULL_PREPAYMENT",
+                  "items": [ { "productId": %d, "sizeCode": "L", "quantity": 1 } ]
+                }
+                """.formatted(product.getId());
+
+        mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors.telegramUsername").exists());
+    }
+
+    @Test
     void rejectsUnavailableSize() throws Exception {
         String json = """
                 {
                   "type": "DOMESTIC",
                   "customerName": "Іван",
                   "phone": "+375291234567",
+                  "postalIndex": "220000",
                   "city": "Мінск",
                   "address": "вул. Леніна 1",
                   "deliveryMethod": "BELPOST",
@@ -114,7 +164,7 @@ class OrderApiIntegrationTest extends AbstractIntegrationTest {
 
         mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("unavailable")));
+                .andExpect(jsonPath("$.message", containsString("unavailable")));
     }
 
     @Test
@@ -124,6 +174,7 @@ class OrderApiIntegrationTest extends AbstractIntegrationTest {
                   "type": "DOMESTIC",
                   "customerName": "Іван",
                   "phone": "+375291234567",
+                  "postalIndex": "220000",
                   "city": "Мінск",
                   "address": "вул. Леніна 1",
                   "deliveryMethod": "BELPOST",

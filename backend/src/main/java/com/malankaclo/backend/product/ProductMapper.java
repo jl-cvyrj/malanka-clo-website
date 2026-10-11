@@ -2,6 +2,7 @@ package com.malankaclo.backend.product;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -14,6 +15,7 @@ public class ProductMapper {
         List<String> availableSizes = product.getSizes().stream()
                 .filter(ProductSize::isAvailable)
                 .map(ProductSize::getSizeCode)
+                .sorted(Comparator.comparingInt(SizeCode::rank))
                 .toList();
 
         return new ProductSummaryResponse(
@@ -35,6 +37,7 @@ public class ProductMapper {
                 .map(this::toImage)
                 .toList();
         List<ProductSizeResponse> sizes = product.getSizes().stream()
+                .sorted(Comparator.comparingInt(size -> SizeCode.rank(size.getSizeCode())))
                 .map(this::toSize)
                 .toList();
 

@@ -14,16 +14,22 @@ public class ProductSizeService {
 
     @Transactional
     public Product addSize(Long productId, String sizeCode, boolean available) {
+        if (!SizeCode.isValid(sizeCode)) {
+            throw new BusinessException(
+                    "Unknown size '" + sizeCode + "'. Allowed sizes: " + SizeCode.ALLOWED);
+        }
+        String normalized = SizeCode.normalize(sizeCode);
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + productId));
 
         boolean exists = product.getSizes().stream()
-                .anyMatch(size -> size.getSizeCode().equalsIgnoreCase(sizeCode));
+                .anyMatch(size -> size.getSizeCode().equalsIgnoreCase(normalized));
         if (exists) {
-            throw new BusinessException("Size already exists for product: " + sizeCode);
+            throw new BusinessException("Size already exists for product: " + normalized);
         }
 
-        product.addSize(new ProductSize(sizeCode, available));
+        product.addSize(new ProductSize(normalized, available));
         return product;
     }
 

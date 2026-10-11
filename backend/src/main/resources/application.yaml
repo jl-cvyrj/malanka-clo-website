@@ -1,9 +1,15 @@
 spring:
+  config:
+    # Load local overrides from backend/.env if present (git-ignored). Real
+    # environment variables still take precedence. Optional so the app starts
+    # without a .env file (using the defaults below).
+    import: optional:file:.env[.properties]
+
   application:
     name: malanka-backend
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:malanka}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${POSTGRES_DB:malanka}
     username: ${POSTGRES_USER:malanka}
     password: ${POSTGRES_PASSWORD:malanka}
 

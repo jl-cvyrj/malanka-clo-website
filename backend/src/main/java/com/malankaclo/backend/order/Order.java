@@ -53,6 +53,12 @@ public class Order {
     @Column(length = 255)
     private String email;
 
+    @Column(name = "telegram_username", length = 64)
+    private String telegramUsername;
+
+    @Column(name = "postal_index", length = 20)
+    private String postalIndex;
+
     @Column(length = 100)
     private String country;
 

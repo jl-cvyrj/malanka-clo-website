@@ -1,0 +1,7 @@
+.thumb {
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-gray-100);
+}

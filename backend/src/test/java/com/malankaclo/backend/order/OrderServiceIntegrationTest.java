@@ -42,6 +42,8 @@ class OrderServiceIntegrationTest extends AbstractIntegrationTest {
                 "  Іван  ",
                 "+375291234567",
                 "  ",
+                "@ivan_test",
+                "220000",
                 "Беларусь",
                 "Мінск",
                 "вул. Леніна 1",
@@ -58,6 +60,9 @@ class OrderServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(order.getPaymentStatus()).isEqualTo(PaymentStatus.UNPAID);
         assertThat(order.getCustomerName()).isEqualTo("Іван");
         assertThat(order.getEmail()).isNull();
+        // Telegram handles are stored without the leading '@'.
+        assertThat(order.getTelegramUsername()).isEqualTo("ivan_test");
+        assertThat(order.getPostalIndex()).isEqualTo("220000");
 
         // The @Builder-ignored-initializer bug would have left items == null and thrown here.
         assertThat(order.getItems()).hasSize(1);

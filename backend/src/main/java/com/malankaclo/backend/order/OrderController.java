@@ -24,6 +24,8 @@ public class OrderController {
                 request.customerName(),
                 request.phone(),
                 request.email(),
+                request.telegramUsername(),
+                request.postalIndex(),
                 request.country(),
                 request.city(),
                 request.address(),

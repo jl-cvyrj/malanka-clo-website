@@ -1,0 +1,104 @@
+.wrapper {
+  position: relative;
+}
+
+.track {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-block: 0.5rem;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  position: relative;
+  flex: 0 0 70%;
+  aspect-ratio: 1 / 1;
+  scroll-snap-align: start;
+  overflow: hidden;
+  background: var(--color-gray-050);
+  border: 1px solid var(--color-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition);
+}
+
+.card:hover {
+  background: var(--color-gray-100);
+}
+
+.cardName {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-gray-600);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--space-4);
+  background: var(--color-black);
+  color: var(--color-white);
+  text-align: center;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 1.05rem;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-white);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.9));
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.wrapper:hover .navButton,
+.navButton:focus-visible {
+  opacity: 1;
+}
+
+.navLeft {
+  left: 0.5rem;
+}
+
+.navRight {
+  right: 0.5rem;
+}
+
+.navButton svg {
+  width: 3rem;
+  height: 3rem;
+}
+
+@media (min-width: 640px) {
+  .card {
+    flex-basis: 40%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    flex-basis: calc((100% - 7.5rem) / 4);
+  }
+}
