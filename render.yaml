@@ -1,0 +1,53 @@
+# Render Blueprint for MALANKA.clo — Spring Boot backend (Docker) + Next.js
+# frontend. The database is Supabase Postgres; see docs/DEPLOYMENT.md.
+#
+# Secrets use `sync: false`, so Render prompts for them in the Dashboard and
+# they are never stored in this file.
+
+services:
+  # ---------- Backend (Spring Boot, Docker) ----------
+  - type: web
+    name: malanka-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/categories
+    envVars:
+      # Supabase: use the *Session pooler* connection string (IPv4, port 5432),
+      # because Render is IPv4-only and the direct Supabase host is IPv6.
+      - key: SPRING_DATASOURCE_URL
+        sync: false # jdbc:postgresql://aws-0-<region>.pooler.supabase.com:5432/postgres?sslmode=require
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false # postgres.<project-ref>
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false # Supabase database password
+      # Exact frontend origin (required only for direct, non-proxied access).
+      - key: APP_CORS_ALLOWED_ORIGINS
+        sync: false # https://malanka-frontend.onrender.com
+      # First administrator, created once when admin_users is empty.
+      - key: APP_ADMIN_INITIAL_USERNAME
+        sync: false
+      - key: APP_ADMIN_INITIAL_PASSWORD
+        sync: false
+
+  # ---------- Frontend (Next.js) ----------
+  - type: web
+    name: malanka-frontend
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
+      # Baked into the browser bundle at build time. Empty => the browser calls
+      # this app and the /api rewrite proxies to the backend.
+      - key: NEXT_PUBLIC_API_BASE_URL
+        value: ""
+      # Absolute backend origin used by the /api proxy and server-side rendering.
+      - key: BACKEND_ORIGIN
+        sync: false # https://malanka-backend.onrender.com

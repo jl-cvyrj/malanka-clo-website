@@ -9,8 +9,32 @@ import type { ApiErrorBody } from "./types";
  *   (Spring Security's `csrf.spa()` convention, see PROJECT_PLAN D9).
  */
 
+/**
+ * Base URL for API calls.
+ *
+ * - In the browser an empty base keeps requests same-origin (`/api/...`); the
+ *   rewrite in `next.config.ts` proxies them to the real backend. This keeps
+ *   cookies first-party and avoids CORS entirely, which matters because the
+ *   admin CSRF token is read from a JavaScript-visible cookie (a cookie set by
+ *   a *different* host is not readable by `document.cookie`).
+ * - During server-side rendering there is no page origin to be relative to, so
+ *   the backend is called directly via `BACKEND_ORIGIN`.
+ *
+ * Production: set `NEXT_PUBLIC_API_BASE_URL=""` and
+ * `BACKEND_ORIGIN=https://<backend-host>`.
+ * Local dev (`.env.local`): the same, with `BACKEND_ORIGIN=http://localhost:8080`.
+ */
+const PUBLIC_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+// Browser: relative by default, so requests are proxied by the rewrite in
+// next.config.ts. Set NEXT_PUBLIC_API_BASE_URL to an absolute URL to bypass
+// the proxy and call the backend directly.
+const BROWSER_BASE = PUBLIC_BASE;
+// Server-side rendering needs an absolute URL.
+const SERVER_BASE =
+  process.env.BACKEND_ORIGIN || PUBLIC_BASE || "http://localhost:8080";
+
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+  typeof window === "undefined" ? SERVER_BASE : BROWSER_BASE;
 
 const CSRF_COOKIE = "XSRF-TOKEN";
 const CSRF_HEADER = "X-XSRF-TOKEN";

@@ -1,0 +1,9 @@
+# Never bake local build output or secrets into the image.
+target/
+.env
+.git/
+.gitignore
+.idea/
+*.iml
+Dockerfile
+.dockerignore
