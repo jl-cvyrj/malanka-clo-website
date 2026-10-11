@@ -2,10 +2,13 @@ package com.malankaclo.backend.order;
 
 import com.malankaclo.backend.common.exception.BusinessException;
 import com.malankaclo.backend.common.exception.ResourceNotFoundException;
+import com.malankaclo.backend.common.web.PageResponse;
 import com.malankaclo.backend.product.Product;
 import com.malankaclo.backend.product.ProductRepository;
 import com.malankaclo.backend.product.ProductSize;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final OrderMapper orderMapper;
 
     @Transactional
     public Order createOrder(CreateOrderCommand command) {
@@ -99,6 +103,19 @@ public class OrderService {
     public Order findById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<OrderSummaryResponse> findPage(OrderStatus status, Pageable pageable) {
+        Page<Order> page = (status == null)
+                ? orderRepository.findAll(pageable)
+                : orderRepository.findByStatus(status, pageable);
+        return PageResponse.from(page, orderMapper::toSummary);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderResponse findDetail(Long id) {
+        return orderMapper.toResponse(findById(id));
     }
 
     @Transactional

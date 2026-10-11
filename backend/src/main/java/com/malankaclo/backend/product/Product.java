@@ -15,6 +15,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -64,11 +65,13 @@ public class Product {
     private Instant updatedAt;
 
     @Builder.Default
+    @BatchSize(size = 50)
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @jakarta.persistence.OrderBy("sortOrder ASC, id ASC")
     private List<ProductImage> images = new ArrayList<>();
 
     @Builder.Default
+    @BatchSize(size = 50)
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @jakarta.persistence.OrderBy("sizeCode ASC")
     private List<ProductSize> sizes = new ArrayList<>();

@@ -1,5 +1,6 @@
 package com.malankaclo.backend.category;
 
+import com.malankaclo.backend.common.exception.DuplicateResourceException;
 import com.malankaclo.backend.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,11 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    @Transactional(readOnly = true)
+    public List<Category> findAll() {
+        return categoryRepository.findAllByOrderBySortOrderAsc();
+    }
 
     @Transactional(readOnly = true)
     public List<Category> findAllActive() {
@@ -44,7 +50,7 @@ public class CategoryService {
 
         if (!category.getSlug().equalsIgnoreCase(slug)
                 && categoryRepository.existsBySlugIgnoreCase(slug)) {
-            throw new IllegalArgumentException("Category slug already exists: " + slug);
+            throw new DuplicateResourceException("Category slug already exists: " + slug);
         }
 
         category.setName(name);
@@ -68,7 +74,7 @@ public class CategoryService {
 
     private void validateSlugIsFree(String slug) {
         if (categoryRepository.existsBySlugIgnoreCase(slug)) {
-            throw new IllegalArgumentException("Category slug already exists: " + slug);
+            throw new DuplicateResourceException("Category slug already exists: " + slug);
         }
     }
 }
