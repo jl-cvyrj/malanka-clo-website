@@ -4,9 +4,10 @@
 
 .track {
   display: flex;
-  /* flex-start (not center!): centering an overflowing flex row clips the left
-     overflow, which can never be scrolled to — the first card would be stuck
-     off-screen on mobile. Left-aligned, every card is reachable by swipe. */
+  /* Left-aligned so overflowing rows can always be scrolled — centering an
+     overflowing flex row clips the left overflow, which can never be scrolled
+     to (first card gets stuck off-screen on mobile). Desktop centering is
+     applied in the ≥1024px media query with `safe center`. */
   justify-content: flex-start;
   gap: 2.5rem;
   overflow-x: auto;
@@ -111,5 +112,13 @@
 @media (min-width: 1024px) {
   .card {
     flex-basis: calc((100% - 7.5rem) / 4);
+  }
+
+  /* Center the cards on desktop: 3–4 cards sum to exactly 100% of the row, so
+     there is nothing to clip. `safe center` falls back to flex-start if the
+     catalog ever grows beyond 4 categories, so the first card still stays
+     reachable instead of being clipped off. */
+  .track {
+    justify-content: safe center;
   }
 }
