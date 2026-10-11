@@ -160,9 +160,9 @@ export const be = {
       "MALANKA — беларуская вопратка для тых, хто цэніць стыль, ідэнтычнасць і сваю гісторыю. Кожная рэч ствараецца з любоўю да Беларусі.",
     navTitle: "Навігацыя",
     contactsTitle: "Кантакты",
-    phone: "+375 (29) 000-00-00",
-    email: "hello@malanka.clo",
-    instagram: "Instagram",
+    phone: "https://t.me/malanka_clo",
+    email: "@pluxurysnake",
+    instagram: "https://www.instagram.com/malanka.clo",
     rights: "Усе правы абаронены.",
   },
 
