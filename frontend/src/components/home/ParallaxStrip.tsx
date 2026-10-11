@@ -37,7 +37,7 @@ export function ParallaxStrip({ text }: { text: string }) {
   }, []);
 
   return (
-      <section ref={stripRef} className={styles.strip}>
+      <section ref={stripRef} id="parallax-logo-strip" className={styles.strip}>
         <div className={styles.inner}>
           <img
               src="/images/logo.png"

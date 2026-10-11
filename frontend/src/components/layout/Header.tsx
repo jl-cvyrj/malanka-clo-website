@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { t } from "@/locales";
@@ -9,15 +10,49 @@ import styles from "./Header.module.css";
 
 export function Header({ categories }: { categories: Category[] }) {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [stripVisible, setStripVisible] = useState(false);
   const { count, ready } = useCart();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
+  // On the home page the big logo sits on a black band right below the hero
+  // ("the black line with the logo"). While that band is on screen the header
+  // logo is redundant, so hide it; everywhere else the header logo always shows.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 600);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!isHome) {
+      setStripVisible(false);
+      return;
+    }
+
+    let observer: IntersectionObserver | null = null;
+    let retries = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const watch = () => {
+      const node = document.getElementById("parallax-logo-strip");
+      if (!node) {
+        // Right after a client-side navigation the strip may not be in the DOM
+        // yet — retry briefly before giving up.
+        if (retries < 20) {
+          retries += 1;
+          timer = setTimeout(watch, 50);
+        }
+        return;
+      }
+      observer = new IntersectionObserver(
+        ([entry]) => setStripVisible(entry.isIntersecting),
+        { threshold: 0 },
+      );
+      observer.observe(node);
+    };
+
+    watch();
+
+    return () => {
+      observer?.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, [isHome]);
 
   useEffect(() => {
     if (!open) return;
@@ -48,7 +83,7 @@ export function Header({ categories }: { categories: Category[] }) {
             <img
               src="/images/logo_original.jpg"
               alt={t.meta.title}
-              className={`${styles.logo} ${scrolled ? "" : styles.logoHidden}`}
+              className={`${styles.logo} ${isHome && stripVisible ? styles.logoHidden : ""}`}
               width={120}
               height={40}
             />
