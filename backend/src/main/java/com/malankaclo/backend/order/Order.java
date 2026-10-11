@@ -38,6 +38,7 @@ public class Order {
     @Column(nullable = false, length = 20)
     private OrderType type;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private OrderStatus status = OrderStatus.NEW;
@@ -68,6 +69,7 @@ public class Order {
     @Column(name = "payment_method", length = 30)
     private PaymentMethod paymentMethod;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 30)
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
@@ -81,6 +83,7 @@ public class Order {
     @Column(name = "total_amount", precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
+    @Builder.Default
     @Column(nullable = false, length = 3)
     private String currency = "BYN";
 
@@ -93,6 +96,7 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 

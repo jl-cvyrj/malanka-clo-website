@@ -49,9 +49,11 @@ public class Product {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
 
+    @Builder.Default
     @Column(nullable = false, length = 3)
     private String currency = "BYN";
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
 
@@ -61,10 +63,12 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @jakarta.persistence.OrderBy("sortOrder ASC, id ASC")
     private List<ProductImage> images = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @jakarta.persistence.OrderBy("sizeCode ASC")
     private List<ProductSize> sizes = new ArrayList<>();
@@ -79,7 +83,12 @@ public class Product {
         this.slug = slug;
         this.description = description;
         this.price = price;
-        this.currency = currency;
+        this.currency = currency == null ? "BYN" : currency;
+        // @Builder.Default moves the field initializers out of the field, so defaults
+        // must be applied explicitly here for constructor-based creation.
+        this.active = true;
+        this.images = new ArrayList<>();
+        this.sizes = new ArrayList<>();
     }
 
     @PrePersist

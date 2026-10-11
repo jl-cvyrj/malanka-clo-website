@@ -26,9 +26,12 @@ public class AdminUser {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private AdminRole role = AdminRole.ADMIN;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean enabled = true;
 
@@ -41,6 +44,9 @@ public class AdminUser {
     public AdminUser(String username, String passwordHash) {
         this.username = username;
         this.passwordHash = passwordHash;
+        // @Builder.Default moves the field initializers out of the fields.
+        this.role = AdminRole.ADMIN;
+        this.enabled = true;
     }
     
     @PrePersist

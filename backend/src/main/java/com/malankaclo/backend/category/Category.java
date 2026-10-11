@@ -23,9 +23,11 @@ public class Category {
     @Column(nullable = false, unique = true, length = 120)
     private String slug;
 
+    @Builder.Default
     @Column(name = "sort_order", nullable = false)
     private Integer sortOrder = 0;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
 
@@ -38,7 +40,9 @@ public class Category {
     public Category(String name, String slug, Integer sortOrder) {
         this.name = name;
         this.slug = slug;
-        this.sortOrder = sortOrder;
+        this.sortOrder = sortOrder == null ? 0 : sortOrder;
+        // @Builder.Default moves the field initializer out of the field.
+        this.active = true;
     }
     
     @PrePersist

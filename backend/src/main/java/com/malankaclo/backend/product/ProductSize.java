@@ -34,6 +34,7 @@ public class ProductSize {
     @Column(name = "size_code", nullable = false, length = 20)
     private String sizeCode;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean available = true;
 
